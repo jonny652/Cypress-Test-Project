@@ -1,0 +1,20 @@
+{
+  "name": "cypress-test-project",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "jonathanruddick",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+   "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "cypress:headed": "cypress run --headed"
+  },
+  "devDependencies": {
+    "cypress": "^15.21.1"
+  },
+  "allowScripts": {
+    "cypress@15.21.1": true
+  }
+}
