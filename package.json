@@ -9,6 +9,7 @@
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "cypress:headed": "cypress run --headed",
+    "cypress:record": "node --env-file=.env node_modules/cypress/bin/cypress run --record",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

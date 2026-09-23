@@ -30,3 +30,6 @@ jobs:
         with:
           browser: chrome
           install: false
+          record: true
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
