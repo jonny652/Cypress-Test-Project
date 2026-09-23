@@ -5,13 +5,14 @@
   "license": "ISC",
   "author": "jonathanruddick",
   "type": "commonjs",
-  "main": "index.js",
   "scripts": {
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "cypress:headed": "cypress run --headed"
+    "cypress:headed": "cypress run --headed",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
+    "@types/node": "^26.6.2",
     "cypress": "^16.0.0",
     "typescript": "^7.0.2"
   },

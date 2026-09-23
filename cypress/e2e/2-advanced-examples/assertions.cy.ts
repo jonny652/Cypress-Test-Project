@@ -125,18 +125,15 @@ context('Assertions', () => {
     })
 
     it('matches unknown text between two elements', () => {
-      /**
-       * Text from the first element.
-       * @type {string}
-      */
-      let text
+      /** Text from the first element. */
+      let text: string
 
       /**
        * Normalizes passed text,
        * useful before comparing text with spaces and different capitalization.
-       * @param {string} s Text to normalize
+       * @param s Text to normalize
       */
-      const normalizeText = (s) => s.replace(/\s/g, '').toLowerCase()
+      const normalizeText = (s: string) => s.replace(/\s/g, '').toLowerCase()
 
       cy.get('.two-elements')
         .find('.first')

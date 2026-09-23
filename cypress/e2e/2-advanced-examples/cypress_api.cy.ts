@@ -10,21 +10,22 @@ context('Cypress APIs', () => {
 
     it('.add() - create a custom command', () => {
       Cypress.Commands.add('console', {
-        prevSubject: true,
-      }, (subject, method) => {
+        prevSubject: true as const,
+      }, (subject: JQuery<HTMLElement>, method?: 'log' | 'info' | 'warn' | 'error') => {
       // the previous subject is automatically received
       // and the commands arguments are shifted
 
         // allow us to change the console method used
-        method = method || 'log'
+        const logMethod = method || 'log'
 
         // log the subject to the console
-        console[method]('The subject is', subject)
+        console[logMethod]('The subject is', subject)
 
         // whatever we return becomes the new subject
         // we don't want to change the subject so
-        // we return whatever was passed in
-        return subject
+        // we return whatever was passed in.
+        // Cypress only types this return as a Chainable, so cast it.
+        return subject as unknown as Cypress.Chainable<JQuery<HTMLElement>>
       })
 
       cy.get('button').console('info').then(($button) => {

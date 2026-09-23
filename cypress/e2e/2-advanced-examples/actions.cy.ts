@@ -240,7 +240,7 @@ context('Actions', () => {
     // the viewable area of their parent
     // (we need to scroll to see them)
     cy.get('#scroll-horizontal button').then(($el) => {
-      const container = $el[0].closest('#scroll-horizontal')
+      const container = $el[0].closest('#scroll-horizontal')!
       expect($el[0].getBoundingClientRect().left).to.be.greaterThan(container.getBoundingClientRect().right)
     })
 
@@ -250,7 +250,7 @@ context('Actions', () => {
       .should('be.visible')
 
     cy.get('#scroll-vertical button').then(($el) => {
-      const container = $el[0].closest('#scroll-vertical')
+      const container = $el[0].closest('#scroll-vertical')!
       expect($el[0].getBoundingClientRect().top).to.be.greaterThan(container.getBoundingClientRect().bottom)
     })
 
@@ -260,7 +260,7 @@ context('Actions', () => {
       .should('be.visible')
 
     cy.get('#scroll-both button').then(($el) => {
-      const container = $el[0].closest('#scroll-both')
+      const container = $el[0].closest('#scroll-both')!
       const elRect = $el[0].getBoundingClientRect()
       const containerRect = container.getBoundingClientRect()
       expect(elRect.left).to.be.greaterThan(containerRect.right)
