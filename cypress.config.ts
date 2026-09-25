@@ -11,6 +11,7 @@ export default defineConfig({
   projectId: "7jh9s1",
 
   e2e: {
+    baseUrl: "https://source.thenbs.com/en/gb",
     setupNodeEvents(on, config) {
       on("task", {
         /**
