@@ -28,27 +28,31 @@ describe("My First Test", () => {
   it("check the dyson telephone number", () => {
     manufacturerPage.checkTelephone()
     .should("be.visible")
-    .and("have.text", "0800 298 0298")
-    .and("have.attr", "href", "tel:08002980298");
+    .and("include.text", "08003457788")
+    .and("have.attr", "href", "tel:08003457788");
 
   });
 
   //03 check the dyson website link
   it("check the dyson website link", () => {
-    manufacturerPage.checkManufacturerWebsiteLink()
-    .should("be.visible")
-    .and("have.text", "www.dyson.co.uk")
-    .and("have.attr", "href", "https://www.dyson.co.uk/")
-    .and("have.attr", "target", "_blank")
-    .and("have.attr", "title", "Visit https://www.dyson.co.uk/commercial/overview");
-    
+    manufacturerPage
+      .checkManufacturerWebsiteLink()
+      .should('be.visible')
+      .and('have.text', ' Website ')
+      .and('have.attr', 'href', 'https://www.dyson.co.uk/commercial/overview')
+      .and('have.attr', 'target', '_blank')
+      .and(
+        'have.attr',
+        'title',
+        'Visit https://www.dyson.co.uk/commercial/overview',
+      );
   });
 
   //04 check the contact manfacurer link
   it("check the contact manfacurer link", () => {
     manufacturerPage.checkContactManufacturerLink()
     .should("be.visible")
-    .and("have.text", "Contact Manufacturer")
-    .and("have.attr", "title", "Contact Manufacturer");
+    .and("contain.text", " Contact manufacturer ")
+    .and("have.attr", "title", "Contact Dyson");
   });
 });

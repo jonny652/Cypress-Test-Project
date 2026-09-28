@@ -8,7 +8,7 @@ export class ManufacturerPage extends BasePage {
     // ==========================================================================
     readonly h1Header = "h1";
     readonly telephone = 'a[action="telephone"]';
-    readonly website = 'a[action="website"]';
+    readonly website = 'a[action="company-website"]';
     readonly contactManufacturer = "button.contact-button";
 
     // ==========================================================================
