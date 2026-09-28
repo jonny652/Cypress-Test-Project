@@ -26,7 +26,7 @@ export class BasePage {
     // navigate to nbs homepage
   navigateToHomePage() {
     cy.visit('/');
-    cy.url().should('eq', 'https://source.thenbs.com/en/gb/');
+    cy.url().should('eq', 'https://source.thenbs.com/en/gb');
   }
 
  

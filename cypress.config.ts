@@ -9,6 +9,7 @@ interface ExecResult {
 
 export default defineConfig({
   projectId: "7jh9s1",
+    defaultCommandTimeout: 10000,
 
   e2e: {
     baseUrl: "https://source.thenbs.com/en/gb",

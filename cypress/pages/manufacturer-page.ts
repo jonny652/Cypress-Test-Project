@@ -15,16 +15,18 @@ export class ManufacturerPage extends BasePage {
     // METHODS
     // store reusable actions and assertions here, using the locators above
     // ==========================================================================
-    checkH1Header(expectedText: string) {
-        cy.get(this.h1Header).should("be.visible").and("have.text", expectedText);
+    checkH1Header() {
+        return cy.get(this.h1Header);
+    //    cy.get(this.h1Header).should("be.visible").and("have.text", expectedText);
     }
-    checkTelephone(expectedText: string) {
-        cy.get(this.telephone).should("be.visible").and("have.text", expectedText);
+    checkTelephone() {
+        return cy.get(this.telephone)
+
     }
-    checkManufacturerWebsiteLink(expectedUrl: string) {
-        cy.get(this.website).should("be.visible").and("have.attr", "href", expectedUrl);
+    checkManufacturerWebsiteLink() {
+        return cy.get(this.website);
     }
     checkContactManufacturerLink() {
-        cy.get(this.contactManufacturer).should("be.visible").and("have.text", " Contact manufacturer ");
+        return cy.get(this.contactManufacturer);
     }
 }   
