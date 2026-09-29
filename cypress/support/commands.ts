@@ -23,3 +23,31 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add("loginUser", () => {
+  // Store the current url to compare after login
+  cy.url().as("currentUrl");
+
+  // Click the sign in button
+  cy.contains("button", "Sign in", { timeout: 10000 }).click();
+
+  // Perform the cross origin login steps, using the EMAIL/PASSWORD
+  // env vars sourced from .env
+  cy.env(["EMAIL", "PASSWORD"]).then(({ EMAIL, PASSWORD }) => {
+    cy.origin(
+      "https://login.thenbs.com",
+      { args: { EMAIL, PASSWORD } },
+      ({ EMAIL, PASSWORD }) => {
+        cy.get("#Identification_Email").type(EMAIL);
+        cy.contains("Next", { timeout: 10000 }).click();
+        cy.get("#Authentication_Password").type(PASSWORD, { log: false });
+        cy.contains("button", "Sign in", { timeout: 10000 }).click();
+      },
+    );
+
+    // Simple post-login assertion to verify we are redirected back to the expected url after login
+    cy.get("@currentUrl").then((currentUrl) => {
+      cy.url().should("include", currentUrl);
+    });
+  });
+});

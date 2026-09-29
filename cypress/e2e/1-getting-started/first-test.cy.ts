@@ -55,4 +55,9 @@ describe("My First Test", () => {
     .and("contain.text", " Contact manufacturer ")
     .and("have.attr", "title", "Contact Dyson");
   });
+
+  //05 check the login works as expected
+  it.only('check the login works as expected', () => {
+    cy.loginUser();
+  })
 });

@@ -10,5 +10,11 @@ declare namespace Cypress {
      * to the browser console and yields it unchanged.
      */
     console(method?: 'log' | 'info' | 'warn' | 'error'): Chainable<Subject>
+
+    /**
+     * Custom command - clicks "Sign in" and logs in on the cross-origin
+     * identity page using the `EMAIL` and `PASSWORD` environment variables.
+     */
+    loginUser(): Chainable<void>
   }
 }
