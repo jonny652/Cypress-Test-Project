@@ -4,3 +4,7 @@ cypress/videos
 cypress/downloads
 .env
 .env.local
+
+# Cached authentication token restored by ensureLoggedIn() across separate
+# `cypress run`/`cypress open` invocations - contains live OIDC tokens.
+cypress/.auth

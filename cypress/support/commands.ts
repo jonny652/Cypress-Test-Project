@@ -51,3 +51,83 @@ Cypress.Commands.add("loginUser", () => {
     });
   });
 });
+
+// The app's auth token (an OIDC user blob) lives in sessionStorage on the
+// app's OWN origin (source.thenbs.com) - the key name embeds the identity
+// provider's URL, but that's just the oidc-client library's naming
+// convention, not where the value is stored.
+function readAuthTokenFromDisk() {
+  return cy.task<Record<string, string> | null>("readAuthCache", null, {
+    log: false,
+  });
+}
+
+function writeAuthTokenToDisk() {
+  cy.window()
+    .then((win) => {
+      const dump: Record<string, string> = {};
+      for (let i = 0; i < win.sessionStorage.length; i++) {
+        const key = win.sessionStorage.key(i)!;
+        dump[key] = win.sessionStorage.getItem(key)!;
+      }
+      return dump;
+    })
+    .then((dump) => {
+      cy.task("writeAuthCache", dump, { log: false });
+    });
+}
+
+Cypress.Commands.add("ensureLoggedIn", () => {
+  // cy.session caches whatever the setup callback below produces (keyed on
+  // "nbsUserSession") and restores it on subsequent calls within the same
+  // `cypress run`/`cypress open` process, instead of re-running setup. If
+  // validate() fails - or no session has been cached yet this run - Cypress
+  // clears the cache and re-runs setup to obtain a fresh token.
+  cy.session(
+    "nbsUserSession",
+    () => {
+      // Before falling back to a full UI sign-in, check whether a still-valid
+      // token was cached to disk by an earlier `cypress run` invocation and,
+      // if so, drop it straight into sessionStorage instead of driving the
+      // login form.
+      cy.visit("/");
+
+      readAuthTokenFromDisk().then((cachedToken) => {
+        if (!cachedToken) {
+          cy.loginUser();
+          return;
+        }
+
+        cy.window().then((win) => {
+          Object.entries(cachedToken).forEach(([key, value]) =>
+            win.sessionStorage.setItem(key, value),
+          );
+        });
+        // Reload so the app's JS re-bootstraps and picks up the token that
+        // was just injected into sessionStorage.
+        cy.reload();
+
+        // The cached token may have expired since it was written. If
+        // restoring it didn't leave us logged in, fall back to a real
+        // sign-in rather than letting cy.session's post-setup validate()
+        // fail outright.
+        cy.get("body").then(($body) => {
+          if ($body.find('button:contains("Sign in")').length) {
+            cy.loginUser();
+          }
+        });
+      });
+
+      // Persist whatever token we ended up with (freshly signed-in or
+      // restored from disk) so the next `cypress run` can reuse it too.
+      writeAuthTokenToDisk();
+    },
+    {
+      validate() {
+        cy.visit("/");
+        cy.contains("button", "Sign in", { timeout: 10000 }).should("not.exist");
+      },
+      cacheAcrossSpecs: true,
+    },
+  );
+});

@@ -16,5 +16,12 @@ declare namespace Cypress {
      * identity page using the `EMAIL` and `PASSWORD` environment variables.
      */
     loginUser(): Chainable<void>
+
+    /**
+     * Custom command - reuses a cached authentication session (cookies/local
+     * storage) if one exists and is still valid, otherwise runs `loginUser()`
+     * to sign in and caches the resulting session for reuse by later tests.
+     */
+    ensureLoggedIn(): Chainable<void>
   }
 }

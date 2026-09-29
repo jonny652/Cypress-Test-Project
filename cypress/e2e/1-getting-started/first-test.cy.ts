@@ -57,7 +57,19 @@ describe("My First Test", () => {
   });
 
   //05 check the login works as expected
-  it.only('check the login works as expected', () => {
+  it('check the login works as expected', () => {
     cy.loginUser();
   })
+});
+
+describe("Authentication session", () => {
+  beforeEach(() => {
+    cy.ensureLoggedIn();
+  });
+
+  //06 check the authentication session/token is reused instead of signing in again
+  it("reuses the cached authentication session on repeat visits", () => {
+    cy.visit("/");
+    cy.contains("button", "Sign in", { timeout: 10000 }).should("not.exist");
+  });
 });
