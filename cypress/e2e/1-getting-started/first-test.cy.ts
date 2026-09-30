@@ -3,6 +3,7 @@
 import { BasePage } from "../../pages/base-page";
 import { SearchResultsPage } from "../../pages/search-results-page";
 import { ManufacturerPage } from "../../pages/manufacturer-page";
+import { checkAccessibility } from "../../../util/accessability";
 
 describe("My First Test", () => {
   const manufacturerPage = new ManufacturerPage();
@@ -60,7 +61,7 @@ describe("My First Test", () => {
 //   it('check the login works as expected', () => {
 //     cy.loginUser();
 //   })
-// });
+});
 
 // describe("Authentication session", () => {
 //   // Before each test, make sure we're logged in (reusing a saved login if possible)
@@ -74,23 +75,21 @@ describe("My First Test", () => {
 //     cy.contains("button", "Sign in", { timeout: 10000 }).should("not.exist");
 //   });
 
-  describe("Accessibility", () => {
-    const basePage = new BasePage();
-    const searchResultsPage = new SearchResultsPage();
+describe("Accessibility", () => {
+  const basePage = new BasePage();
+  const searchResultsPage = new SearchResultsPage();
 
-    // Before each test, make sure we're logged in (reusing a saved login if possible)
-    beforeEach(() => {
-      cy.ensureLoggedIn();
-      basePage.navigateToHomePage();
-      basePage.searchFor("Dyson");
-      searchResultsPage.clickManufacturerTab();
-      searchResultsPage.clickManufacturerTile();
-    });
+  // Before each test, make sure we're logged in (reusing a saved login if possible)
+  beforeEach(() => {
+    cy.ensureLoggedIn();
+    basePage.navigateToHomePage();
+    basePage.searchFor("Dyson");
+    searchResultsPage.clickManufacturerTab();
+    searchResultsPage.clickManufacturerTile();
+  });
 
-    //07 check accesability of the dyson manufacturer page with axe-core plugin
-    it("checks accessibility of the dyson manufacturer page", () => {
-      cy.injectAxe();
-      cy.checkA11y();
-    });
+  //07 check accesability of the dyson manufacturer page with axe-core plugin
+  it("checks accessibility of the dyson manufacturer page", () => {
+    checkAccessibility();
   });
 });

@@ -2,6 +2,8 @@ import { defineConfig } from "cypress";
 import { exec } from "node:child_process";
 import * as fs from "node:fs";
 import * as path from "node:path";
+import { createHtmlReport } from "axe-html-reporter";
+import type { Result } from "axe-core";
 
 interface ExecResult {
   stdout: string;
@@ -12,6 +14,10 @@ interface ExecResult {
 // The file where we save the login token, so later test runs can skip logging in.
 // It's in .gitignore because it contains a real, working login.
 const AUTH_CACHE_PATH = path.join(__dirname, "cypress", ".auth", "session.json");
+
+// Folder where accessibility scan results are written, one file per test.
+// Relative, because axe-html-reporter resolves it against process.cwd() itself.
+const ACCESSIBILITY_REPORT_DIR = path.join("cypress", "reports", "accessibility");
 
 // Load EMAIL and PASSWORD from the .env file. Cypress won't read a .env file
 // by itself, so we load it here and pass the values into the `env` block below.
@@ -73,6 +79,28 @@ export default defineConfig({
         writeAuthCache(data: Record<string, string>): null {
           fs.mkdirSync(path.dirname(AUTH_CACHE_PATH), { recursive: true });
           fs.writeFileSync(AUTH_CACHE_PATH, JSON.stringify(data));
+          return null;
+        },
+
+        /**
+         * Writes the axe-core violations found for a test to their own
+         * HTML report, instead of failing the test.
+         */
+        writeAccessibilityReport({
+          testTitle,
+          violations,
+        }: {
+          testTitle: string;
+          violations: Result[];
+        }): null {
+          const safeName = testTitle.replace(/[^a-z0-9-_ ]/gi, "_");
+          createHtmlReport({
+            results: { violations },
+            options: {
+              outputDir: ACCESSIBILITY_REPORT_DIR,
+              reportFileName: `${safeName}.html`,
+            },
+          });
           return null;
         },
       });

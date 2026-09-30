@@ -115,6 +115,11 @@ Cypress.Commands.add("ensureLoggedIn", () => {
         // Reload the page so the site notices the token and logs us in
         cy.reload();
 
+        // Wait for the app to finish hydrating before checking whether we're
+        // logged in. Right after reload() the page can still be rendering, so
+        // an immediate check here could miss a token that's actually invalid.
+        cy.get('[data-cy="searchFieldSearch"]', { timeout: 10000 }).should("exist");
+
         // The saved token might have expired. If "Sign in" is still showing,
         // it didn't work, so log in the normal way instead.
         cy.get("body").then(($body) => {
