@@ -9,18 +9,17 @@ interface ExecResult {
   exitCode: number;
 }
 
-// On-disk cache of the OIDC session storage token, so `ensureLoggedIn()` can
-// skip the UI sign-in flow on a fresh `cypress run` if a still-valid token
-// was cached by an earlier run. Gitignored - contains live credentials.
+// The file where we save the login token, so later test runs can skip logging in.
+// It's in .gitignore because it contains a real, working login.
 const AUTH_CACHE_PATH = path.join(__dirname, "cypress", ".auth", "session.json");
 
-// Cypress only auto-imports system env vars prefixed with `CYPRESS_`, so a
-// plain `.env` file (EMAIL, PASSWORD, ...) is invisible to cy.env() unless
-// we load it into process.env and forward it into the `env` block below.
+// Load EMAIL and PASSWORD from the .env file. Cypress won't read a .env file
+// by itself, so we load it here and pass the values into the `env` block below.
+// We point at the .env next to this file, so it works whichever folder Cypress starts from.
 try {
-  process.loadEnvFile();
+  process.loadEnvFile(path.join(__dirname, ".env"));
 } catch {
-  // No .env file present (e.g. CI providing real env vars directly) - ignore.
+  // No .env file (e.g. on CI, where the values are set another way) - that's fine
 }
 
 export default defineConfig({
@@ -55,8 +54,9 @@ export default defineConfig({
         },
 
         /**
-         * Returns the previously cached auth token blob, or `null` if none
-         * has been saved yet (or it can't be parsed).
+         * Reads the saved login token from the file.
+         * Returns `null` if the file doesn't exist yet or can't be read.
+         * (Tasks run in Node, which can access files - the browser can't.)
          */
         readAuthCache(): Record<string, string> | null {
           try {
@@ -67,8 +67,8 @@ export default defineConfig({
         },
 
         /**
-         * Persists the auth token blob to disk for reuse by a future
-         * `cypress run`/`cypress open` invocation.
+         * Saves the login token to the file (creating the folder if needed),
+         * so the next test run can reuse it.
          */
         writeAuthCache(data: Record<string, string>): null {
           fs.mkdirSync(path.dirname(AUTH_CACHE_PATH), { recursive: true });

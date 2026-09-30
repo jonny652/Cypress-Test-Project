@@ -24,47 +24,53 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+// Signs the user in by clicking through the real login pages.
 Cypress.Commands.add("loginUser", () => {
-  // Store the current url to compare after login
+  // Remember which page we're on, so we can check we land back here after logging in
   cy.url().as("currentUrl");
 
-  // Click the sign in button
+  // Click the "Sign in" button on the main site
   cy.contains("button", "Sign in", { timeout: 10000 }).click();
 
-  // Perform the cross origin login steps, using the EMAIL/PASSWORD
-  // env vars sourced from .env
+  // Get the email and password from the .env file
   cy.env(["EMAIL", "PASSWORD"]).then(({ EMAIL, PASSWORD }) => {
+    // The login form lives on a different website (login.thenbs.com), and Cypress
+    // needs cy.origin() to run commands there. We pass the email/password in as args.
     cy.origin(
       "https://login.thenbs.com",
       { args: { EMAIL, PASSWORD } },
       ({ EMAIL, PASSWORD }) => {
         cy.get("#Identification_Email").type(EMAIL);
         cy.contains("Next", { timeout: 10000 }).click();
-        cy.get("#Authentication_Password").type(PASSWORD, { log: false });
+        cy.get("#Authentication_Password").type(PASSWORD, { log: false }); // log: false hides the password in the Cypress log
         cy.contains("button", "Sign in", { timeout: 10000 }).click();
       },
     );
 
-    // Simple post-login assertion to verify we are redirected back to the expected url after login
+    // Check we've been sent back to the page we started on (login worked)
     cy.get("@currentUrl").then((currentUrl) => {
       cy.url().should("include", currentUrl);
     });
   });
 });
 
-// The app's auth token (an OIDC user blob) lives in sessionStorage on the
-// app's OWN origin (source.thenbs.com) - the key name embeds the identity
-// provider's URL, but that's just the oidc-client library's naming
-// convention, not where the value is stored.
+// Once logged in, the site keeps its login token in the browser's sessionStorage
+// (a small key/value store the website can read). If we save that token to a file,
+// we can put it back later and skip logging in.
+
+// Reads the saved token from the file (via a Node task in cypress.config.ts).
+// Gives back null if no token has been saved yet.
 function readAuthTokenFromDisk() {
   return cy.task<Record<string, string> | null>("readAuthCache", null, {
     log: false,
   });
 }
 
+// Copies everything in sessionStorage (including the token) and saves it to the file.
 function writeAuthTokenToDisk() {
   cy.window()
     .then((win) => {
+      // Loop through every item in sessionStorage and copy it into a plain object
       const dump: Record<string, string> = {};
       for (let i = 0; i < win.sessionStorage.length; i++) {
         const key = win.sessionStorage.key(i)!;
@@ -73,44 +79,44 @@ function writeAuthTokenToDisk() {
       return dump;
     })
     .then((dump) => {
+      // Hand the object to Node to write to the file
       cy.task("writeAuthCache", dump, { log: false });
     });
 }
 
+// Makes sure we're logged in, using the quickest option available:
+//   1. A session Cypress already has in memory (from earlier in this run)
+//   2. A token saved to file (from a previous run)
+//   3. Logging in for real with loginUser()
 Cypress.Commands.add("ensureLoggedIn", () => {
-  // cy.session caches whatever the setup callback below produces (keyed on
-  // "nbsUserSession") and restores it on subsequent calls within the same
-  // `cypress run`/`cypress open` process, instead of re-running setup. If
-  // validate() fails - or no session has been cached yet this run - Cypress
-  // clears the cache and re-runs setup to obtain a fresh token.
+  // cy.session() remembers the login under the name "nbsUserSession".
+  // The first time, it runs the setup function below. After that, it restores
+  // the remembered login instead - unless validate() shows it no longer works.
   cy.session(
     "nbsUserSession",
+    // Setup function - only runs when Cypress doesn't already have a working login
     () => {
-      // Before falling back to a full UI sign-in, check whether a still-valid
-      // token was cached to disk by an earlier `cypress run` invocation and,
-      // if so, drop it straight into sessionStorage instead of driving the
-      // login form.
       cy.visit("/");
 
+      // Check if a token was saved to file by a previous run
       readAuthTokenFromDisk().then((cachedToken) => {
+        // No saved token - log in the normal way
         if (!cachedToken) {
           cy.loginUser();
           return;
         }
 
+        // Saved token found - put it back into sessionStorage
         cy.window().then((win) => {
           Object.entries(cachedToken).forEach(([key, value]) =>
             win.sessionStorage.setItem(key, value),
           );
         });
-        // Reload so the app's JS re-bootstraps and picks up the token that
-        // was just injected into sessionStorage.
+        // Reload the page so the site notices the token and logs us in
         cy.reload();
 
-        // The cached token may have expired since it was written. If
-        // restoring it didn't leave us logged in, fall back to a real
-        // sign-in rather than letting cy.session's post-setup validate()
-        // fail outright.
+        // The saved token might have expired. If "Sign in" is still showing,
+        // it didn't work, so log in the normal way instead.
         cy.get("body").then(($body) => {
           if ($body.find('button:contains("Sign in")').length) {
             cy.loginUser();
@@ -118,15 +124,16 @@ Cypress.Commands.add("ensureLoggedIn", () => {
         });
       });
 
-      // Persist whatever token we ended up with (freshly signed-in or
-      // restored from disk) so the next `cypress run` can reuse it too.
+      // Save the current token to file so the next run can reuse it
       writeAuthTokenToDisk();
     },
     {
+      // Checks the login still works: if "Sign in" isn't shown, we're logged in
       validate() {
         cy.visit("/");
         cy.contains("button", "Sign in", { timeout: 10000 }).should("not.exist");
       },
+      // Share the login between all test files in the same run
       cacheAcrossSpecs: true,
     },
   );

@@ -5,6 +5,5 @@ cypress/downloads
 .env
 .env.local
 
-# Cached authentication token restored by ensureLoggedIn() across separate
-# `cypress run`/`cypress open` invocations - contains live OIDC tokens.
+# Saved login token used by ensureLoggedIn() - contains a real login, never commit it
 cypress/.auth

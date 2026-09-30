@@ -18,9 +18,9 @@ declare namespace Cypress {
     loginUser(): Chainable<void>
 
     /**
-     * Custom command - reuses a cached authentication session (cookies/local
-     * storage) if one exists and is still valid, otherwise runs `loginUser()`
-     * to sign in and caches the resulting session for reuse by later tests.
+     * Custom command - makes sure we're logged in. Reuses a saved login token
+     * if there's one that still works, otherwise signs in with `loginUser()`
+     * and saves the new token for next time.
      */
     ensureLoggedIn(): Chainable<void>
   }
