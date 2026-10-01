@@ -3,6 +3,11 @@ cypress/screenshots
 cypress/videos
 cypress/downloads
 cypress/reports
+
+# Visual regression: actual/diff images are disposable per-run output.
+# cypress/snapshots/base is NOT ignored - that's the committed reference baseline.
+cypress/snapshots/actual
+cypress/snapshots/diff
 .env
 .env.local
 

@@ -9,6 +9,7 @@
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "cypress:headed": "cypress run --headed",
+    "cypress:visual:update": "cypress run --expose visualRegressionType=base --spec \"cypress/e2e/1-getting-started/first-test.cy.ts\"",
     "cypress:record": "node --env-file=.env node_modules/cypress/bin/cypress run --record",
     "typecheck": "tsc --noEmit"
   },
@@ -18,6 +19,7 @@
     "axe-html-reporter": "^2.2.11",
     "cypress": "^16.0.0",
     "cypress-axe": "^1.7.0",
+    "cypress-visual-regression": "^6.0.1",
     "typescript": "^7.0.2"
   },
   "allowScripts": {

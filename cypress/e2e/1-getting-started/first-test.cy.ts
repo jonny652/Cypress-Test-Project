@@ -4,6 +4,7 @@ import { BasePage } from "../../pages/base-page";
 import { SearchResultsPage } from "../../pages/search-results-page";
 import { ManufacturerPage } from "../../pages/manufacturer-page";
 import { checkAccessibility } from "../../../util/accessability";
+import { checkVisualRegression } from "../../../util/visual-regression";
 
 describe("My First Test", () => {
   const manufacturerPage = new ManufacturerPage();
@@ -75,7 +76,26 @@ describe("My First Test", () => {
 //     cy.contains("button", "Sign in", { timeout: 10000 }).should("not.exist");
 //   });
 
-describe("Accessibility", () => {
+// describe("Accessibility", () => {
+//   const basePage = new BasePage();
+//   const searchResultsPage = new SearchResultsPage();
+
+//   // Before each test, make sure we're logged in (reusing a saved login if possible)
+//   beforeEach(() => {
+//     cy.ensureLoggedIn();
+//     basePage.navigateToHomePage();
+//     basePage.searchFor("Dyson");
+//     searchResultsPage.clickManufacturerTab();
+//     searchResultsPage.clickManufacturerTile();
+//   });
+
+//   //07 check accesability of the dyson manufacturer page with axe-core plugin
+//   it("checks accessibility of the dyson manufacturer page", () => {
+//     checkAccessibility();
+//   });
+// });
+
+describe("Visual Regression", () => {
   const basePage = new BasePage();
   const searchResultsPage = new SearchResultsPage();
 
@@ -88,8 +108,8 @@ describe("Accessibility", () => {
     searchResultsPage.clickManufacturerTile();
   });
 
-  //07 check accesability of the dyson manufacturer page with axe-core plugin
-  it("checks accessibility of the dyson manufacturer page", () => {
-    checkAccessibility();
+  //08 check visual regression of the dyson manufacturer page
+  it("checks visual regression of the dyson manufacturer page", () => {
+    checkVisualRegression("dyson-manufacturer-page");
   });
 });

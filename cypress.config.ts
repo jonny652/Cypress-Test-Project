@@ -4,6 +4,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { createHtmlReport } from "axe-html-reporter";
 import type { Result } from "axe-core";
+import { configureVisualRegression } from "cypress-visual-regression";
 
 interface ExecResult {
   stdout: string;
@@ -38,7 +39,17 @@ export default defineConfig({
       EMAIL: process.env.EMAIL,
       PASSWORD: process.env.PASSWORD,
     },
+    // Where cypress-visual-regression writes the screenshot it just took,
+    // before comparing it to the committed baseline in cypress/snapshots/base.
+    screenshotsFolder: "./cypress/snapshots/actual",
+    expose: {
+      // 'regression' compares against the baseline; 'base' (re)writes it.
+      // Overridden per-run via `cypress run --expose visualRegressionType=base`.
+      visualRegressionType: "regression",
+    },
     setupNodeEvents(on, config) {
+      configureVisualRegression(on);
+
       on("task", {
         /**
          * Runs a system command in Node and resolves with its output.
