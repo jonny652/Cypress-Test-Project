@@ -1,1 +1,10 @@
 node_modules
+cypress/screenshots
+cypress/videos
+cypress/downloads
+cypress/reports
+.env
+.env.local
+
+# Saved login token used by ensureLoggedIn() - contains a real login, never commit it
+cypress/.auth
