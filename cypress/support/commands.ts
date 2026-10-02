@@ -66,6 +66,20 @@ function readAuthTokenFromDisk() {
   });
 }
 
+// Checks whether the saved token has passed its expiry time.
+// The token is stored as JSON with an "expires_at" time in seconds.
+function isTokenExpired(cachedToken: Record<string, string>): boolean {
+  const nowInSeconds = Date.now() / 1000;
+  return Object.values(cachedToken).some((value) => {
+    try {
+      const expiresAt = JSON.parse(value).expires_at;
+      return typeof expiresAt === "number" && expiresAt < nowInSeconds;
+    } catch {
+      return false; // not JSON, so not the token
+    }
+  });
+}
+
 // Copies everything in sessionStorage (including the token) and saves it to the file.
 function writeAuthTokenToDisk() {
   cy.window()
@@ -100,8 +114,8 @@ Cypress.Commands.add("ensureLoggedIn", () => {
 
       // Check if a token was saved to file by a previous run
       readAuthTokenFromDisk().then((cachedToken) => {
-        // No saved token - log in the normal way
-        if (!cachedToken) {
+        // No saved token, or it has expired - log in the normal way
+        if (!cachedToken || isTokenExpired(cachedToken)) {
           cy.loginUser();
           return;
         }

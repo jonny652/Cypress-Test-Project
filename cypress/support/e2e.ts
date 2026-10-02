@@ -16,3 +16,12 @@
 // Import commands.js using ES2015 syntax:
 import './commands'
 import 'cypress-axe'
+import { addCompareSnapshotCommand } from 'cypress-visual-regression/dist/command'
+
+// 'fullPage' captures the whole page, top to bottom. checkVisualRegression
+// (util/visual-regression.ts) stops the site's sticky header repeating in it.
+addCompareSnapshotCommand({
+  capture: 'fullPage',
+  errorThreshold: 0.0001, // fraction of pixels allowed to differ before a test fails (0.001 = 0.1%)
+  pixelmatchOptions: { threshold: 0.2 }, // per-pixel sensitivity, absorbs minor anti-aliasing noise
+})
