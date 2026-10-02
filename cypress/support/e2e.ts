@@ -22,6 +22,6 @@ import { addCompareSnapshotCommand } from 'cypress-visual-regression/dist/comman
 // (util/visual-regression.ts) stops the site's sticky header repeating in it.
 addCompareSnapshotCommand({
   capture: 'fullPage',
-  errorThreshold: 0.001, // fraction of pixels allowed to differ before a test fails (0.001 = 0.1%)
+  errorThreshold: 0.0001, // fraction of pixels allowed to differ before a test fails (0.001 = 0.1%)
   pixelmatchOptions: { threshold: 0.2 }, // per-pixel sensitivity, absorbs minor anti-aliasing noise
 })

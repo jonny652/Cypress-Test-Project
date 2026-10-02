@@ -39,7 +39,10 @@ function preparePageForScreenshot(): void {
 // Takes a screenshot of the whole page and compares it to its committed
 // baseline, failing the test if they differ by more than the project's
 // configured tolerance (see addCompareSnapshotCommand in cypress/support/e2e.ts).
+// The operating system is added to the name (e.g. "dyson-manufacturer-page-linux"),
+// because screenshots render slightly differently on each OS. CI runs on Linux,
+// so only the "-linux" baselines are committed (see .gitignore).
 export function checkVisualRegression(name: string): void {
   preparePageForScreenshot();
-  cy.compareSnapshot(name);
+  cy.compareSnapshot(`${name}-${Cypress.platform}`);
 }

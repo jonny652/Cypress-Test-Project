@@ -3,7 +3,7 @@
 import { BasePage } from "../../pages/base-page";
 import { SearchResultsPage } from "../../pages/search-results-page";
 import { ManufacturerPage } from "../../pages/manufacturer-page";
-import { checkAccessibility } from "../../../util/accessability";
+import { checkAccessibility } from "../../../util/accessibility";
 import { checkVisualRegression } from "../../../util/visual-regression";
 
 describe("My First Test", () => {
@@ -91,7 +91,7 @@ describe("My First Test", () => {
 
 //   //07 check accesability of the dyson manufacturer page with axe-core plugin
 //   it("checks accessibility of the dyson manufacturer page", () => {
-//     checkAccessibility();
+//     checkAccessibility("dyson manufacturer page");
 //   });
 // });
 

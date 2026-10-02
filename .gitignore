@@ -8,6 +8,10 @@ cypress/reports
 # cypress/snapshots/base is NOT ignored - that's the committed reference baseline.
 cypress/snapshots/actual
 cypress/snapshots/diff
+# Only commit the Linux baselines (the ones CI compares against) - screenshots
+# taken on Windows/Mac render slightly differently, so keep those local.
+cypress/snapshots/base/**/*.png
+!cypress/snapshots/base/**/*linux*.png
 .env
 .env.local
 
