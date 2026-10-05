@@ -10,6 +10,7 @@ export class ManufacturerPage extends BasePage {
     readonly telephone = 'a[action="telephone"]';
     readonly website = 'a[action="company-website"]';
     readonly contactManufacturer = "button.contact-button";
+    readonly certificatesTab = '[data-cy="certificatesTab"]';
 
     // ==========================================================================
     // METHODS
@@ -28,5 +29,9 @@ export class ManufacturerPage extends BasePage {
     }
     checkContactManufacturerLink() {
         return cy.get(this.contactManufacturer);
+    }
+    // click the certificates tab
+    clickCertificatesTab() {
+        cy.get(this.certificatesTab).click();
     }
 }   

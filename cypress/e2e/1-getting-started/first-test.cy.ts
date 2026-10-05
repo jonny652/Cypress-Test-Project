@@ -114,3 +114,42 @@ describe("Visual Regression", () => {
     checkVisualRegression("dyson-manufacturer-page");
   });
 });
+
+describe("API - Certificates", () => {
+  const manufacturerPage = new ManufacturerPage();
+  const basePage = new BasePage();
+  const searchResultsPage = new SearchResultsPage();
+
+  beforeEach(() => {
+    basePage.navigateToHomePage();
+    basePage.searchFor("Dyson");
+    searchResultsPage.clickManufacturerTab();
+    searchResultsPage.clickManufacturerTile();
+  });
+
+  //09 check the "no results" message when no certificates are returned
+  it("shows no results when the certificates payload is empty", () => {
+    // intercept graphql calls and edit the response before the page receives it
+    cy.intercept("POST", "**/graphql", (req) => {
+      req.continue((res) => {
+        // the site batches graphql queries, so the response is a list of results
+        const results = Array.isArray(res.body) ? res.body : [res.body];
+
+        results.forEach((result) => {
+          // only change the certificates result, leave other queries alone
+          const certificates = result?.data?.certifications?.byBrandId?.paginatedResponse;
+          if (certificates) {
+            certificates.items = []; // remove all certificates
+            certificates.totalItems = 0; // update the count to match
+          }
+        });
+      });
+    }).as("graphql");
+
+    manufacturerPage.clickCertificatesTab();
+    cy.wait("@graphql");
+
+    // check the empty state message is shown
+    cy.contains("Sorry, no results were found").should("be.visible");
+  });
+});
