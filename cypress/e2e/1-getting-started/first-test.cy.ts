@@ -28,40 +28,41 @@ describe("My First Test", () => {
 
   //02 check the dyson telephone number
   it("check the dyson telephone number", () => {
-    manufacturerPage.checkTelephone()
-    .should("be.visible")
-    .and("include.text", "08003457788")
-    .and("have.attr", "href", "tel:08003457788");
-
+    manufacturerPage
+      .checkTelephone()
+      .should("be.visible")
+      .and("include.text", "08003457788")
+      .and("have.attr", "href", "tel:08003457788");
   });
 
   //03 check the dyson website link
   it("check the dyson website link", () => {
     manufacturerPage
       .checkManufacturerWebsiteLink()
-      .should('be.visible')
-      .and('have.text', ' Website ')
-      .and('have.attr', 'href', 'https://www.dyson.co.uk/commercial/overview')
-      .and('have.attr', 'target', '_blank')
+      .should("be.visible")
+      .and("have.text", " Website ")
+      .and("have.attr", "href", "https://www.dyson.co.uk/commercial/overview")
+      .and("have.attr", "target", "_blank")
       .and(
-        'have.attr',
-        'title',
-        'Visit https://www.dyson.co.uk/commercial/overview',
+        "have.attr",
+        "title",
+        "Visit https://www.dyson.co.uk/commercial/overview",
       );
   });
 
   //04 check the contact manfacurer link
   it("check the contact manfacurer link", () => {
-    manufacturerPage.checkContactManufacturerLink()
-    .should("be.visible")
-    .and("contain.text", " Contact manufacturer ")
-    .and("have.attr", "title", "Contact Dyson");
+    manufacturerPage
+      .checkContactManufacturerLink()
+      .should("be.visible")
+      .and("contain.text", " Contact manufacturer ")
+      .and("have.attr", "title", "Contact Dyson");
   });
 
   //05 check the login works as expected
-  it('check the login works as expected', () => {
+  it("check the login works as expected", () => {
     cy.loginUser();
-  })
+  });
 });
 
 describe("Authentication session", () => {
@@ -137,7 +138,8 @@ describe("API - Certificates", () => {
 
         results.forEach((result) => {
           // only change the certificates result, leave other queries alone
-          const certificates = result?.data?.certifications?.byBrandId?.paginatedResponse;
+          const certificates =
+            result?.data?.certifications?.byBrandId?.paginatedResponse;
           if (certificates) {
             certificates.items = []; // remove all certificates
             certificates.totalItems = 0; // update the count to match
