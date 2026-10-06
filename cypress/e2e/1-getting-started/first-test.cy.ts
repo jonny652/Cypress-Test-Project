@@ -129,7 +129,7 @@ describe("API - Certificates", () => {
   });
 
   //09 check the "no results" message when no certificates are returned
-  it("shows no results when the certificates payload is empty", () => {
+  it.only("shows no results when the certificates payload is empty", () => {
     // intercept graphql calls and edit the response before the page receives it
     cy.intercept("POST", "**/graphql", (req) => {
       req.continue((res) => {

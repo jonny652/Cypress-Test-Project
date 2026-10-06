@@ -6,11 +6,11 @@
   "author": "jonathanruddick",
   "type": "commonjs",
   "scripts": {
-    "cypress:open": "cypress open",
-    "cypress:run": "cypress run",
-    "cypress:headed": "cypress run --headed",
-    "cypress:visual:update": "cypress run --expose visualRegressionType=base --spec \"cypress/e2e/1-getting-started/first-test.cy.ts\"",
-    "cypress:record": "node --env-file=.env node_modules/cypress/bin/cypress run --record",
+    "cypress:open": "cypress open --browser edge",
+    "cypress:run": "cypress run --browser edge",
+    "cypress:headed": "cypress run --headed --browser edge",
+    "cypress:visual:update": "cypress run --browser edge --expose visualRegressionType=base --spec \"cypress/e2e/1-getting-started/first-test.cy.ts\"",
+    "cypress:record": "node --env-file=.env node_modules/cypress/bin/cypress run --browser edge --record",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
