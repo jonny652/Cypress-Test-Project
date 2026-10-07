@@ -10,8 +10,7 @@ export class BasePage {
   // ==========================================================================
  
   readonly searchField = '[data-cy="searchFieldSearch"]';
-  readonly signInButton = 'button';
-  readonly signInButtonText = 'Sign in';
+  readonly signInButton = 'button:contains("Sign in")';
  
   // ==========================================================================
   // METHODS
@@ -27,7 +26,7 @@ export class BasePage {
 
   // click the sign in button
   clickSignInButton() {
-    cy.contains(this.signInButton, this.signInButtonText, { timeout: 10000 }).click();
+    cy.get(this.signInButton, { timeout: 10000 }).click();
   }
 
     // navigate to nbs homepage
@@ -36,5 +35,5 @@ export class BasePage {
     cy.url().should('eq', 'https://source.thenbs.com/en/gb');
   }
 
- 
+
 }
