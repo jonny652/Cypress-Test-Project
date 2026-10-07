@@ -18,6 +18,14 @@ Feature: DysonManufacturePage
     And opens up a new tab when clicked
     And has title "Visit https://www.dyson.co.uk/commercial/overview"
 
+    Scenario: check the login works as expected
+    Given I click the sign in button
+    When I enter valid credntials and click the login button
+    Then I should be signed in and redirected to the original page
+
+
+    
+
 
 
 

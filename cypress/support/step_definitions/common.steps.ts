@@ -30,3 +30,21 @@ When("I visit the home page", () => {
 Then("the page heading is {string}", (heading: string) => {
   manufacturerPage.checkH1Header().should("be.visible").and("have.text", heading);
 });
+
+Then("I click the sign in button", () => {
+  basePage.clickSignInButton();
+});
+
+Then("I enter valid credntials and click the login button", () => {
+  cy.loginUser();
+});
+
+Then("I should be signed in and redirected to the original page", () => {
+  cy.get("@currentUrl").then((currentUrl) => {
+    cy.url().should("include", currentUrl);
+  });
+});
+
+
+
+
