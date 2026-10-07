@@ -10,7 +10,8 @@ export class BasePage {
   // ==========================================================================
  
   readonly searchField = '[data-cy="searchFieldSearch"]';
-  readonly signInButton = "Sign in";
+  readonly signInButton = 'button';
+  readonly signInButtonText = 'Sign in';
  
   // ==========================================================================
   // METHODS
@@ -26,7 +27,7 @@ export class BasePage {
 
   // click the sign in button
   clickSignInButton() {
-    cy.get(this.signInButton).click();
+    cy.contains(this.signInButton, this.signInButtonText, { timeout: 10000 }).click();
   }
 
     // navigate to nbs homepage
