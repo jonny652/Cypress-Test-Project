@@ -1,0 +1,21 @@
+{
+  // Settings for the "Cucumber (Gherkin) Full Support" extension, so F12 /
+  // Ctrl+click on a step in a .feature file jumps to its step definition.
+
+  // Where the step definitions are (the code behind each Given/When/Then)
+  "cucumberautocomplete.steps": ["cypress/support/step_definitions/**/*.ts"],
+
+  // Where the feature files are, so steps can be suggested while typing
+  "cucumberautocomplete.syncfeatures": "cypress/e2e/**/*.feature",
+
+  // A step can be used with any keyword (a "Then" step can follow "And", etc.)
+  "cucumberautocomplete.strictGherkinCompletion": false,
+
+  // When autocompleting a step, turn {string}/{int} into fill-in placeholders
+  "cucumberautocomplete.smartSnippets": true,
+
+  // Treat .feature files as Gherkin (in case another extension claims them)
+  "files.associations": {
+    "*.feature": "feature"
+  }
+}

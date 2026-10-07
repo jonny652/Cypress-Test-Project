@@ -3,6 +3,9 @@ import { exec } from "node:child_process";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { configureVisualRegression } from "cypress-visual-regression";
+import { addCucumberPreprocessorPlugin } from "@badeball/cypress-cucumber-preprocessor";
+import { createEsbuildPlugin } from "@badeball/cypress-cucumber-preprocessor/esbuild";
+import createBundler from "@bahmutov/cypress-esbuild-preprocessor";
 
 interface ExecResult {
   stdout: string;
@@ -29,6 +32,8 @@ export default defineConfig({
 
   e2e: {
     baseUrl: "https://source.thenbs.com/en/gb",
+    // Run both normal Cypress specs (*.cy.ts) and Cucumber feature files (*.feature)
+    specPattern: ["cypress/e2e/**/*.cy.{js,ts}", "cypress/e2e/**/*.feature"],
     env: {
       EMAIL: process.env.EMAIL,
       PASSWORD: process.env.PASSWORD,
@@ -41,7 +46,18 @@ export default defineConfig({
       // Overridden per-run via `cypress run --expose visualRegressionType=base`.
       visualRegressionType: "regression",
     },
-    setupNodeEvents(on, config) {
+    async setupNodeEvents(on, config) {
+      // Cucumber: lets Cypress read .feature files and match each step to
+      // its code in cypress/support/step_definitions
+      await addCucumberPreprocessorPlugin(on, config);
+
+      // Bundles every spec (and its step definitions) with esbuild before
+      // it runs in the browser. Needed so .feature files can be loaded.
+      on(
+        "file:preprocessor",
+        createBundler({ plugins: [createEsbuildPlugin(config)] }),
+      );
+
       configureVisualRegression(on);
 
       on("task", {

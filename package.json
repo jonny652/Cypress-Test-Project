@@ -10,16 +10,20 @@
     "cypress:run": "cypress run --browser edge",
     "cypress:headed": "cypress run --headed --browser edge",
     "cypress:visual:update": "cypress run --browser edge --expose visualRegressionType=base --spec \"cypress/e2e/1-getting-started/first-test.cy.ts\"",
+    "cypress:cucumber": "cypress run --browser edge --spec \"cypress/e2e/**/*.feature\"",
     "cypress:record": "node --env-file=.env node_modules/cypress/bin/cypress run --browser edge --record",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
+    "@badeball/cypress-cucumber-preprocessor": "^28.0.0",
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.8",
     "@types/node": "^26.6.2",
     "axe-core": "^4.13.0",
     "axe-html-reporter": "^2.2.11",
     "cypress": "^16.0.0",
     "cypress-axe": "^1.7.0",
     "cypress-visual-regression": "^6.0.1",
+    "esbuild": "^0.28.2",
     "typescript": "^7.0.2"
   },
   "allowScripts": {
