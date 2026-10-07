@@ -25,7 +25,7 @@ Then("the website link should be visible", () => {
 });
 
 // check the dyson website link  
-Then("to have text", (websiteText: string) => {
+Then("to have text {string}", (websiteText: string) => {
   manufacturerPage
     .checkManufacturerWebsiteLink()
     .should("have.text", websiteText);
