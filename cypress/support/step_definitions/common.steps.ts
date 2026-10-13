@@ -50,7 +50,7 @@ Given("I am signed in", () => {
 });
 
 Then("the sign in button should not be visible", () => {
-  cy.contains("button", "Sign in", { timeout: 10000 }).should("not.exist");
+  cy.get(basePage.signInButton, { timeout: 10000 }).should("not.exist");
 });
 
 
