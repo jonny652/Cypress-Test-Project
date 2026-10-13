@@ -2,6 +2,8 @@ Feature: DysonManufacturePage
 
     Feature Description - regression tests on the Dyson manufacture page.
 
+    Rule: Manufacturer details
+
     Background:
     Given I am on the Dyson manufacturer page
 
@@ -26,6 +28,16 @@ Feature: DysonManufacturePage
     Given I click the sign in button
     When I enter valid credntials and click the login button
     Then I should be signed in and redirected to the original page
+
+    Rule: Authentication session
+
+    Background:
+    Given I am signed in
+
+    # 06 check the authentication session is reused
+    Scenario: reuses the cached authentication session on repeat visits
+    When I visit the home page
+    Then the sign in button should not be visible
 
 
     

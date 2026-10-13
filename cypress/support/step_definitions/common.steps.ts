@@ -45,6 +45,14 @@ Then("I should be signed in and redirected to the original page", () => {
   });
 });
 
+Given("I am signed in", () => {
+  cy.ensureLoggedIn();
+});
+
+Then("the sign in button should not be visible", () => {
+  cy.contains("button", "Sign in", { timeout: 10000 }).should("not.exist");
+});
+
 
 
 
