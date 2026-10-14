@@ -71,18 +71,18 @@ import {delayCertificates,
 //   });
 // });
 
-// describe("Authentication session", () => {
-//   // Before each test, make sure we're logged in (reusing a saved login if possible)
-//   beforeEach(() => {
-//     cy.ensureLoggedIn();
-//   });
+describe("Authentication session", () => {
+  // Before each test, make sure we're logged in (reusing a saved login if possible)
+  beforeEach(() => {
+    cy.ensureLoggedIn();
+  });
 
-//   //06 check the authentication session/token is reused instead of signing in again
-//   it("reuses the cached authentication session on repeat visits", () => {
-//     cy.visit("/");
-//     cy.contains("button", "Sign in", { timeout: 10000 }).should("not.exist");
-//   });
-// });
+  //06 check the authentication session/token is reused instead of signing in again
+  it("reuses the cached authentication session on repeat visits", () => {
+    cy.visit("/");
+    cy.contains("button", "Sign in", { timeout: 10000 }).should("not.exist");
+  });
+});
 
 // describe("Accessibility", () => {
 //   const basePage = new BasePage();

@@ -24,13 +24,17 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+import { BasePage } from "../pages/base-page";
+
+const basePage = new BasePage();
+
 // Signs the user in by clicking through the real login pages.
 Cypress.Commands.add("loginUser", () => {
   // Remember which page we're on, so we can check we land back here after logging in
   cy.url().as("currentUrl");
 
   // Click the "Sign in" button on the main site
- // cy.contains("button", "Sign in", { timeout: 10000 }).click();
+  basePage.clickSignInButton();
 
   // Get the email and password from the .env file
   cy.env(["EMAIL", "PASSWORD"]).then(({ EMAIL, PASSWORD }) => {
@@ -132,12 +136,12 @@ Cypress.Commands.add("ensureLoggedIn", () => {
         // Wait for the app to finish hydrating before checking whether we're
         // logged in. Right after reload() the page can still be rendering, so
         // an immediate check here could miss a token that's actually invalid.
-        cy.get('[data-cy="searchFieldSearch"]', { timeout: 10000 }).should("exist");
+        cy.get(basePage.searchField, { timeout: 10000 }).should("exist");
 
         // The saved token might have expired. If "Sign in" is still showing,
         // it didn't work, so log in the normal way instead.
         cy.get("body").then(($body) => {
-          if ($body.find('button:contains("Sign in")').length) {
+          if ($body.find(basePage.signInButton).length) {
             cy.loginUser();
           }
         });
@@ -150,7 +154,7 @@ Cypress.Commands.add("ensureLoggedIn", () => {
       // Checks the login still works: if "Sign in" isn't shown, we're logged in
       validate() {
         cy.visit("/");
-        cy.contains("button", "Sign in", { timeout: 10000 }).should("not.exist");
+        cy.get(basePage.signInButton, { timeout: 10000 }).should("not.exist");
       },
       // Share the login between all test files in the same run
       cacheAcrossSpecs: true,

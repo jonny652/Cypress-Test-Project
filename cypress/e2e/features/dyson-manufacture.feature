@@ -4,6 +4,8 @@ Feature: DysonManufacturePage
 
     Rule: Manufacturer details
 
+    Rule: Manufacturer details
+
         Background:
             Given I am on the Dyson manufacturer page
 

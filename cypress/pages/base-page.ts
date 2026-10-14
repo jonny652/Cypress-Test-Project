@@ -10,7 +10,8 @@ export class BasePage {
   // ==========================================================================
  
   readonly searchField = '[data-cy="searchFieldSearch"]';
-  readonly signInButton = 'button:contains("Sign in")';
+  // :visible - the page has more than one "Sign in" button, but only one is shown
+  readonly signInButton = 'button:contains("Sign in"):visible';
  
   // ==========================================================================
   // METHODS
