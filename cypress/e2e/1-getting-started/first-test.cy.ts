@@ -5,8 +5,7 @@ import { SearchResultsPage } from "../../pages/search-results-page";
 import { ManufacturerPage } from "../../pages/manufacturer-page";
 import { checkAccessibility } from "../../../util/accessibility";
 import { checkVisualRegression } from "../../../util/visual-regression";
-import {
-  delayCertificates,
+import {delayCertificates,
   isCertificatesQuery,
   modifyCertificates,
   spyOnCertificates,
@@ -268,7 +267,7 @@ describe("API - Certificates", () => {
   });
 
   //16 check the page shows every certificate the API returns
-  it("shows the same number of certificates as the API returns", () => {
+  it("I intercept the API call to get the certificates and return multiple certificates", () => {
     // watch the real response without changing it
     spyOnCertificates();
 
